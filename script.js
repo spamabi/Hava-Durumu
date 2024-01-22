@@ -1,6 +1,7 @@
 const url = 'https://api.openweathermap.org/data/2.5/';
 const key = '40d8d60ca773d44f874725fcd0f4de55';
 const lang = 'tr';
+const defaultCity = 'istanbul';
 
 let timeoutId;
 
@@ -48,4 +49,3 @@ const displayResult = (result) => {
 
 const search = document.getElementById('search');
 search.addEventListener('input', setQuery);
-};
