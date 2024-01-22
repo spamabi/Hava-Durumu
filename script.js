@@ -1,12 +1,28 @@
 const url = 'https://api.openweathermap.org/data/2.5/';
-const key = '40d8d60ca773d44f874725fcd0f4de55';
-const lang = 'tr';
-const x = document.getElementById("demo");
+        const key = '40d8d60ca773d44f874725fcd0f4de55';
+        const lang = 'tr';
+        const x = document.getElementById("demo");
 
-const getResult = (cityName) => {
-    let query = `${url}weather?q=${cityName}&appid=${key}&lang=${lang}&units=metric`;
-        fetch(query)
-         .then(weather => {
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Konum bilgisini kullanarak hava durumu bilgilerini al
+            getResultByCoordinates(latitude, longitude);
+        }
+
+        const getResultByCoordinates = (latitude, longitude) => {
+            let query = `${url}weather?lat=${latitude}&lon=${longitude}&appid=${key}&lang=${lang}&units=metric`;
+            fetch(query)
+                .then(weather => {
                     return weather.json();
                 })
                 .then(displayResult);
@@ -32,32 +48,4 @@ const getResult = (cityName) => {
 
             let speed = document.querySelector('.speed');
             speed.innerText = `${Math.round(result.wind.speed)}km/s`;
-        };
-
-        const search = document.getElementById('search');
-        search.addEventListener('input', () => getResult(search.value));
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                x.innerHTML = "Geolocation is not supported by this browser.";
-            }
-        }
-
-        function showPosition(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-
-            // Konum bilgisini kullanarak hava durumu bilgilerini al
-            getResultByCoordinates(latitude, longitude);
-        }
-
-        const getResultByCoordinates = (latitude, longitude) => {
-            let query = `${url}weather?lat=${latitude}&lon=${longitude}&appid=${key}&lang=${lang}&units=metric`;
-            fetch(query)
-                .then(weather => {
-                    return weather.json();
-                })
-                .then(displayResult);
         };
