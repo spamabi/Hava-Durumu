@@ -11,17 +11,17 @@ const setQuery = () => {
 
     // Yeni bir setTimeout başlat
     timeoutId = setTimeout(() => {
-        getResult(search.value);
+getResult(search.value);
     }, 500); // Örnek olarak 500 milisaniye (0.5 saniye) gecikme süresi
 };
 
 const getResult = (cityName) => {
     let query = `${url}weather?q=${cityName}&appid=${key}&lang=${lang}&units=metric`;
     fetch(query)
-        .then(weather => {
-            return weather.json();
-        })
-        .then(displayResult);
+.then(weather => {
+    return weather.json();
+})
+.then(displayResult);
 };
 
 const displayResult = (result) => {
@@ -44,21 +44,39 @@ const displayResult = (result) => {
 
     let speed = document.querySelector('.speed');
     speed.innerText = `${Math.round(result.wind.speed)}km/s`;
-
 };
 
 const search = document.getElementById('search');
 search.addEventListener('input', setQuery);
 
 function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
+    if (navigator.geolocation) {
+navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+x.innerHTML = "Geolocation is not supported by this browser.";
+    }
 }
 
 function showPosition(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude + 
-  "<br>Longitude: " + position.coords.longitude;
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    // Konum bilgisini kullanarak hava durumu bilgilerini al
+    getResultByCoordinates(latitude, longitude);
+
+    // Belirli aralıklarla hava durumu bilgilerini güncelle
+    setInterval(() => {
+getResultByCoordinates(latitude, longitude);
+    }, 600000); // Örnek olarak 10 dakika (600,000 milisaniye) aralıkla güncelleme
 }
+
+const getResultByCoordinates = (latitude, longitude) => {
+    let query = `${url}weather?lat=${latitude}&lon=${longitude}&appid=${key}&lang=${lang}&units=metric`;
+    fetch(query)
+.then(weather => {
+    return weather.json();
+})
+.then(displayResult);
+};
+
+    
