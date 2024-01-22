@@ -1,31 +1,26 @@
 const url = 'https://api.openweathermap.org/data/2.5/';
 const key = '40d8d60ca773d44f874725fcd0f4de55';
 const lang = 'tr';
-const x = document.getElementById("demo");
 
-function getLocation() {
-    if (navigator.geolocation) {
-navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
+let timeoutId;
 
-function showPosition(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
+const setQuery = () => {
+    // Önceki setTimeout'u temizle
+    clearTimeout(timeoutId);
 
-    // Konum bilgisini kullanarak hava durumu bilgilerini al
-    getResultByCoordinates(latitude, longitude);
-}
+    // Yeni bir setTimeout başlat
+    timeoutId = setTimeout(() => {
+        getResult(search.value);
+    }, 500); // Örnek olarak 500 milisaniye (0.5 saniye) gecikme süresi
+};
 
-const getResultByCoordinates = (latitude, longitude) => {
-    let query = `${url}weather?lat=${latitude}&lon=${longitude}&appid=${key}&lang=${lang}&units=metric`;
+const getResult = (cityName) => {
+    let query = `${url}weather?q=${cityName}&appid=${key}&lang=${lang}&units=metric`;
     fetch(query)
-.then(weather => {
-    return weather.json();
-})
-.then(displayResult);
+        .then(weather => {
+            return weather.json();
+        })
+        .then(displayResult);
 };
 
 const displayResult = (result) => {
@@ -48,9 +43,9 @@ const displayResult = (result) => {
 
     let speed = document.querySelector('.speed');
     speed.innerText = `${Math.round(result.wind.speed)}km/s`;
+
 };
 
-const searchWeather = () => {
-    const cityName = document.getElementById('search').value;
-    getResult(cityName);
-};
+const search = document.getElementById('search');
+search.addEventListener('input', setQuery);
+}
