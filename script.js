@@ -1,7 +1,7 @@
 const url = 'https://api.openweathermap.org/data/2.5/';
 const key = '40d8d60ca773d44f874725fcd0f4de55';
 const lang = 'tr';
-const defaultCity = 'istanbul';
+const x = document.getElementById("demo");
 
 let timeoutId;
 
@@ -49,3 +49,16 @@ const displayResult = (result) => {
 
 const search = document.getElementById('search');
 search.addEventListener('input', setQuery);
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+}
