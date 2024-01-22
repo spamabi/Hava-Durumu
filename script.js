@@ -48,4 +48,4 @@ const displayResult = (result) => {
 
 const search = document.getElementById('search');
 search.addEventListener('input', setQuery);
-}
+};
